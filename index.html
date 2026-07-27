@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Jeffrey Xu — Design Portfolio</title>
+<meta name="description" content="Design portfolio of Jeffrey Xu, Electrical Engineering student at the University of Waterloo. Hardware and power projects." />
+
+<!-- ============================================================= -->
+<!--  FONTS                                                         -->
+<!-- ============================================================= -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+/* ================================================================
+   DESIGN TOKENS
+   Palette: cool paper, ink black, hairline grey, electric cobalt
+   ================================================================ */
+:root {
+  color-scheme: light;
+  --paper:      #F6F7F9;   /* cool paper background            */
+  --surface:    #FFFFFF;   /* cards / panels                   */
+  --ink:        #14161A;   /* near-black text                  */
+  --ink-soft:   #4A4F58;   /* secondary text                   */
+  --hairline:   #DDE1E7;   /* thin rules & borders             */
+  --grid:       #E6E9EE;   /* engineering grid lines           */
+  --accent:     #1B4DFF;   /* electric cobalt (signal blue)    */
+  --accent-dim: #1B4DFF1a; /* 10% accent wash                  */
+
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-body:    "Inter", system-ui, sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, monospace;
+
+  --maxw: 1080px;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+  --radius: 4px;
+}
+
+/* ================================================================
+   RESET & BASE
+   ================================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background-color: var(--paper);
+  /* faint engineering coordinate grid */
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img { display: block; max-width: 100%; }
+a { color: inherit; }
+
+/* accessible focus */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ================================================================
+   LAYOUT PRIMITIVES
+   ================================================================ */
+.wrap { max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.section { padding-block: clamp(3.5rem, 9vw, 7rem); }
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 1rem;
+}
+.section-head h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  letter-spacing: -0.02em;
+}
+.section-head .count {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  margin-left: auto;
+}
+
+/* ================================================================
+   NAV
+   ================================================================ */
+header.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--hairline);
+}
+.nav-inner {
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding: 0.9rem var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.brand {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.brand .dot {
+  width: 9px; height: 9px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px var(--accent-dim);
+}
+.nav-links { display: flex; gap: 1.75rem; }
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-decoration: none;
+  color: var(--ink-soft);
+  transition: color 0.15s ease;
+}
+.nav-links a:hover { color: var(--ink); }
+@media (max-width: 620px) { .nav-links { display: none; } }
+
+/* ================================================================
+   HERO / INTRO
+   ================================================================ */
+.hero { position: relative; padding-block: clamp(4rem, 12vw, 8rem) clamp(3rem, 8vw, 5rem); }
+
+/* registration corner marks — engineering drawing vernacular */
+.hero::before, .hero::after {
+  content: "";
+  position: absolute;
+  width: 22px; height: 22px;
+  border: 1.5px solid var(--accent);
+  opacity: 0.5;
+}
+.hero::before { top: 2rem; left: var(--gutter); border-right: none; border-bottom: none; }
+.hero::after  { top: 2rem; right: var(--gutter); border-left: none;  border-bottom: none; }
+
+.hero .status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  padding: 0.35rem 0.7rem;
+  border-radius: 100px;
+  margin-bottom: 1.75rem;
+}
+.hero .status .pulse {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #17b26a;
+  box-shadow: 0 0 0 3px #17b26a26;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.4rem, 7vw, 4.6rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  max-width: 14ch;
+}
+.hero h1 .accent { color: var(--accent); }
+.hero .lede {
+  margin-top: 1.75rem;
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  color: var(--ink-soft);
+  max-width: 54ch;
+}
+.meta {
+  margin-top: 2.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 0.5rem;
+}
+.meta span {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius);
+}
+
+/* ================================================================
+   PROJECTS
+   ================================================================ */
+.project {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  margin-bottom: 2rem;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.project:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--hairline)); }
+
+.project-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.project-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  padding: 0.15rem 0.45rem;
+  flex-shrink: 0;
+  margin-top: 0.35rem;
+}
+.project h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.project .role {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  margin-top: 0.35rem;
+}
+.project .desc { color: var(--ink-soft); max-width: 68ch; margin-bottom: 1.5rem; }
+
+.project .stack {
+  display: flex; flex-wrap: wrap; gap: 0.4rem;
+  margin-bottom: 1.5rem;
+}
+.project .stack span {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  padding: 0.25rem 0.55rem;
+  border-radius: 3px;
+}
+
+/* photo grid: first photo large, next two stacked */
+.gallery {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-auto-rows: 1fr;
+  gap: 0.6rem;
+}
+.gallery .frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  aspect-ratio: 4 / 3;
+}
+.gallery .frame:first-child { grid-row: span 2; aspect-ratio: auto; }
+.gallery .frame img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.gallery .frame:hover img { transform: scale(1.03); }
+.gallery .frame .cap {
+  position: absolute;
+  bottom: 0; left: 0;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: #fff;
+  background: color-mix(in srgb, var(--ink) 78%, transparent);
+  padding: 0.2rem 0.5rem;
+  border-top-right-radius: 3px;
+}
+.project .links {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+.project .links a {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-decoration: none;
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s ease;
+}
+.project .links a:hover { border-bottom-color: var(--accent); }
+.project .links a::after { content: "↗"; font-size: 0.85em; }
+
+@media (max-width: 620px) {
+  .gallery { grid-template-columns: 1fr 1fr; }
+  .gallery .frame:first-child { grid-row: auto; grid-column: span 2; aspect-ratio: 16/9; }
+}
+
+/* ================================================================
+   SKILLS
+   ================================================================ */
+.skill-group {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 1.5rem 2rem;
+  padding-block: 1.5rem;
+  border-bottom: 1px solid var(--hairline);
+}
+.skill-group:last-child { border-bottom: none; }
+.skill-group .label {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--ink);
+  padding-top: 0.15rem;
+}
+.skill-group .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.skill-group .chips span {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  padding: 0.35rem 0.7rem;
+  border-radius: var(--radius);
+}
+@media (max-width: 620px) {
+  .skill-group { grid-template-columns: 1fr; gap: 0.75rem; }
+}
+
+/* ================================================================
+   CONTACT
+   ================================================================ */
+.contact { border-top: 1px solid var(--hairline); }
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
+  align-items: end;
+}
+.contact-grid h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+.contact-grid h2 a { color: var(--accent); text-decoration: none; border-bottom: 2px solid var(--accent-dim); }
+.contact-grid h2 a:hover { border-bottom-color: var(--accent); }
+.socials { display: flex; flex-direction: column; gap: 0.6rem; text-align: right; }
+.socials a {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  text-decoration: none;
+  color: var(--ink-soft);
+  transition: color 0.15s ease;
+}
+.socials a:hover { color: var(--accent); }
+@media (max-width: 620px) {
+  .contact-grid { grid-template-columns: 1fr; }
+  .socials { text-align: left; }
+}
+
+/* ================================================================
+   FOOTER
+   ================================================================ */
+footer.foot {
+  border-top: 1px solid var(--hairline);
+  padding-block: 2rem;
+}
+.foot-inner {
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+}
+
+/* ================================================================
+   MOTION PREFERENCES
+   ================================================================ */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =============================================================
+     NAV
+     ============================================================= -->
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="brand" id="nav-brand"><span class="dot"></span><span></span></a>
+    <nav class="nav-links">
+      <a href="#skills">skills</a>
+      <a href="#work">work</a>
+      <a href="#about">about</a>
+      <a href="#contact">contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ===========================================================
+       HERO / INTRO
+       =========================================================== -->
+  <section class="hero wrap">
+    <span class="status"><span class="pulse"></span><span id="hero-status"></span></span>
+    <h1 id="hero-name"></h1>
+    <p class="lede" id="hero-lede"></p>
+  </section>
+
+  <!-- ===========================================================
+       SKILLS
+       =========================================================== -->
+  <section class="section wrap" id="skills">
+    <div class="section-head">
+      <span class="eyebrow">Toolkit</span>
+      <h2>Skills</h2>
+    </div>
+    <div id="skills-list"></div>
+  </section>
+
+  <!-- ===========================================================
+       WORK / PROJECTS
+       =========================================================== -->
+  <section class="section wrap" id="work">
+    <div class="section-head">
+      <span class="eyebrow">Selected work</span>
+      <h2>Projects</h2>
+      <span class="count" id="project-count"></span>
+    </div>
+    <div id="projects"></div>
+  </section>
+
+  <!-- ===========================================================
+       ABOUT
+       =========================================================== -->
+  <section class="section wrap" id="about">
+    <div class="section-head">
+      <span class="eyebrow">Background</span>
+      <h2>About</h2>
+    </div>
+    <p class="lede" id="about-text" style="color:var(--ink-soft); max-width:64ch;"></p>
+    <div class="meta" id="hero-meta" style="margin-top:2rem;"></div>
+  </section>
+
+  <!-- ===========================================================
+       CONTACT
+       =========================================================== -->
+  <section class="section wrap contact" id="contact">
+    <div class="section-head">
+      <span class="eyebrow">Get in touch</span>
+      <h2>Contact</h2>
+    </div>
+    <div class="contact-grid">
+      <h2 id="contact-line"></h2>
+      <div class="socials" id="socials"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <span id="foot-name"></span>
+    <span id="foot-built"></span>
+  </div>
+</footer>
+
+<!-- =============================================================
+     ============  EDIT YOUR CONTENT BELOW  ======================
+     Everything about you lives in this one CONFIG object.
+     Change the text, links, and photo file names here — you never
+     need to touch the HTML or CSS above.
+
+     PHOTOS: drop your images into an "images" folder next to this
+     file, then reference them like "images/my-project-1.jpg".
+     Until you add them, neat labeled placeholders show instead.
+     ============================================================= -->
+<script>
+const CONFIG = {
+  // ---- BASICS ------------------------------------------------
+  name: "Jeffrey Xu",
+  initials: "JX",
+  status: "Seeking a Fall 2026 co-op",
+
+  // one-line headline shown big at the top. Wrap a word in
+  // {{ }} to paint it cobalt, e.g. "I build {{robots}}."
+  headline: "Jeffrey Xu {{Design Portfolio}}",
+
+  // short intro paragraph under the headline
+  lede: "Electrical Engineering student at the University of Waterloo, interested in hardware and power.",
+
+  // quick facts shown as chips under the intro
+  tags: ["Honours Electrical Engineering", "University of Waterloo", "GPA 3.72"],
+
+  // ---- ABOUT -------------------------------------------------
+  about: "I'm an Electrical Engineering student at the University of Waterloo (Honours, 3.72 GPA), drawn to hardware and power. I currently design electrical hardware for UW Orbital, Waterloo's satellite design team, where I built an EPS current-sense circuit around an INA180 amplifier. I've also worked as a research and QA engineering intern at Groupthink Labs. I like projects that run the full stack — from schematic capture and PCB layout in Altium, to firmware in C on Arduino, to digital logic in Verilog on FPGAs.",
+
+  // ---- SKILLS ------------------------------------------------
+  // Grouped skills shown in the Skills section. Add or edit freely.
+  skills: [
+    {
+      group: "Hardware & Lab",
+      items: ["Altium Designer", "FPGA", "Analog & Digital Circuits", "Circuit Analysis",
+              "Component Selection", "Oscilloscope", "Digital Multimeter (DMM)",
+              "Soldering", "Arduino", "Raspberry Pi"]
+    },
+    {
+      group: "Software & Firmware",
+      items: ["C", "C++", "Python", "Verilog", "Quartus Prime", "SPI", "I2C",
+              "VS Code", "GitHub"]
+    }
+  ],
+
+  // ---- CONTACT ----------------------------------------------
+  email: "jeffrey.xu1@uwaterloo.ca",
+
+  // Social / contact links. Remove any you don't want, or add more.
+  // Each needs a label and a url.
+  socials: [
+    { label: "LinkedIn", url: "https://www.linkedin.com/in/jeffreyxuu" },
+    { label: "Email",    url: "mailto:jeffrey.xu1@uwaterloo.ca" }
+  ],
+
+  // ---- PROJECTS ---------------------------------------------
+  // Add as many as you like. Each project supports up to 3 photos.
+  // The first photo shows large; the next two stack beside it.
+  projects: [
+    {
+      title: "Portable Sensory Cube",
+      role: "Arduino medical assistive device",
+      desc: "An Arduino-based assistive device aimed at mitigating hospital-induced delirium. It drives a TFT LCD over SPI to guide breathing exercises, and reads a MAX30102 pulse oximeter over I2C — configuring the sensor's registers to sample real-time photoplethysmography (PPG) data for heart-rate processing. Housed in a 3D-printed chassis with a joystick, speaker, and RTC clock.",
+      stack: ["Arduino", "C", "SPI", "I2C", "MAX30102"],
+      photos: [
+        { src: "images/sensory-cube-device.jpg", cap: "finished device" },
+        { src: "images/sensory-cube-schematic.png", cap: "wiring schematic" }
+      ],
+      links: []
+    },
+    {
+      title: "IC Current-Sense Amplifier",
+      role: "UW Orbital · satellite EPS hardware",
+      desc: "A current-sense circuit for UW Orbital's satellite power system, built around an INA180 amplifier and a 0.22 Ω shunt resistor sized to limit power loss. I followed the INA180 datasheet layout guidance — checking capacitor voltage ratings and shunt power rating — to improve measurement stability and cut noise in the sense path, then laid out and soldered the PCB in Altium Designer.",
+      stack: ["Altium Designer", "INA180", "Analog Design", "PCB Layout", "Soldering"],
+      photos: [
+        { src: "images/current-sense-board.jpg", cap: "soldered PCB" },
+        { src: "images/current-sense-layout.png", cap: "Altium layout" },
+        { src: "images/current-sense-schematic.png", cap: "schematic" }
+      ],
+      links: []
+    }
+  ]
+};
+
+/* =============================================================
+   RENDER — you shouldn't need to edit below this line.
+   ============================================================= */
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, c =>
+    ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+  const accentize = (s) => esc(s).replace(/\{\{(.+?)\}\}/g,
+    '<span class="accent">$1</span>');
+
+  // inline SVG placeholder so the page looks intentional before
+  // real photos are added
+  const placeholder = (label) => {
+    const svg =
+      `<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'>
+        <rect width='800' height='600' fill='%23eef1f5'/>
+        <g fill='none' stroke='%23c7cdd6' stroke-width='1'>
+          ${Array.from({length:16},(_,i)=>`<line x1='${i*50}' y1='0' x2='${i*50}' y2='600'/>`).join('')}
+          ${Array.from({length:12},(_,i)=>`<line x1='0' y1='${i*50}' x2='800' y2='${i*50}'/>`).join('')}
+        </g>
+        <circle cx='400' cy='285' r='34' fill='none' stroke='%231B4DFF' stroke-width='2'/>
+        <line x1='400' y1='241' x2='400' y2='329' stroke='%231B4DFF' stroke-width='2'/>
+        <line x1='356' y1='285' x2='444' y2='285' stroke='%231B4DFF' stroke-width='2'/>
+        <text x='400' y='380' font-family='monospace' font-size='22' fill='%236b7280'
+          text-anchor='middle'>${label}</text>
+        <text x='400' y='408' font-family='monospace' font-size='13' fill='%239aa2b0'
+          text-anchor='middle'>add photo</text>
+      </svg>`;
+    return "data:image/svg+xml;utf8," + svg.replace(/\n\s*/g, "");
+  };
+
+  // BASICS
+  document.title = CONFIG.name + " — Portfolio";
+  $("nav-brand").querySelector("span:last-child").textContent = CONFIG.name;
+  $("hero-status").textContent = CONFIG.status;
+  $("hero-name").innerHTML = accentize(CONFIG.headline);
+  $("hero-lede").textContent = CONFIG.lede;
+  $("hero-meta").innerHTML = CONFIG.tags
+    .map(t => `<span>${esc(t)}</span>`).join("");
+
+  // ABOUT
+  $("about-text").textContent = CONFIG.about;
+
+  // SKILLS
+  $("skills-list").innerHTML = (CONFIG.skills || []).map(g =>
+    `<div class="skill-group">
+      <div class="label">${esc(g.group)}</div>
+      <div class="chips">${g.items.map(s => `<span>${esc(s)}</span>`).join("")}</div>
+    </div>`
+  ).join("");
+
+  // CONTACT
+  $("contact-line").innerHTML =
+    `Let's talk. <a href="mailto:${esc(CONFIG.email)}">${esc(CONFIG.email)}</a>`;
+  $("socials").innerHTML = CONFIG.socials
+    .map(s => `<a href="${esc(s.url)}"${/^https?:/.test(s.url) ? ' target="_blank" rel="noopener"' : ''}>${esc(s.label)} →</a>`)
+    .join("");
+
+  // FOOTER
+  const yr = new Date().getFullYear();
+  $("foot-name").textContent = `© ${yr} ${CONFIG.name}`;
+  $("foot-built").textContent = "Built with care · hosted on GitHub Pages";
+
+  // PROJECTS
+  $("project-count").textContent =
+    String(CONFIG.projects.length).padStart(2, "0") + " total";
+
+  $("projects").innerHTML = CONFIG.projects.map((p, i) => {
+    const tag = "P-" + String(i + 1).padStart(2, "0");
+    const photos = (p.photos || []).slice(0, 3).map((ph, j) => {
+      const fallback = placeholder((p.title.split(" ")[0] || "IMG"));
+      return `<figure class="frame">
+        <img src="${esc(ph.src)}" alt="${esc(p.title)} — ${esc(ph.cap || 'photo ' + (j+1))}"
+          loading="lazy" onerror="this.onerror=null;this.src='${fallback}';" />
+        ${ph.cap ? `<figcaption class="cap">${esc(ph.cap)}</figcaption>` : ""}
+      </figure>`;
+    }).join("");
+    const stack = (p.stack || []).map(s => `<span>${esc(s)}</span>`).join("");
+    const links = (p.links || []).map(l =>
+      `<a href="${esc(l.url)}"${/^https?:/.test(l.url) ? ' target="_blank" rel="noopener"' : ''}>${esc(l.label)}</a>`
+    ).join("");
+
+    return `<article class="project">
+      <div class="project-top">
+        <span class="project-tag">${tag}</span>
+        <div>
+          <h3>${esc(p.title)}</h3>
+          ${p.role ? `<div class="role">${esc(p.role)}</div>` : ""}
+        </div>
+      </div>
+      <p class="desc">${esc(p.desc)}</p>
+      ${stack ? `<div class="stack">${stack}</div>` : ""}
+      <div class="gallery">${photos}</div>
+      ${links ? `<div class="links">${links}</div>` : ""}
+    </article>`;
+  }).join("");
+})();
+</script>
+</body>
+</html>
