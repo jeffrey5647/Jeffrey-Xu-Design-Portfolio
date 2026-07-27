@@ -517,8 +517,8 @@ footer.foot {
      Change the text, links, and photo file names here — you never
      need to touch the HTML or CSS above.
 
-     PHOTOS: drop your images into an "images" folder next to this
-     file, then reference them like "images/my-project-1.jpg".
+     PHOTOS: keep your image files next to this index.html file and
+     reference them by name, like "my-project-1.jpg".
      Until you add them, neat labeled placeholders show instead.
      ============================================================= -->
 <script>
@@ -577,8 +577,8 @@ const CONFIG = {
       desc: "An Arduino-based assistive device aimed at mitigating hospital-induced delirium. It drives a TFT LCD over SPI to guide breathing exercises, and reads a MAX30102 pulse oximeter over I2C — configuring the sensor's registers to sample real-time photoplethysmography (PPG) data for heart-rate processing. Housed in a 3D-printed chassis with a joystick, speaker, and RTC clock.",
       stack: ["Arduino", "C", "SPI", "I2C", "MAX30102"],
       photos: [
-        { src: "images/sensory-cube-device.jpg", cap: "finished device" },
-        { src: "images/sensory-cube-schematic.png", cap: "wiring schematic" }
+        { src: "sensory-cube-device.jpg", cap: "finished device" },
+        { src: "sensory-cube-schematic.png", cap: "wiring schematic" }
       ],
       links: []
     },
@@ -588,9 +588,9 @@ const CONFIG = {
       desc: "A current-sense circuit for UW Orbital's satellite power system, built around an INA180 amplifier and a 0.22 Ω shunt resistor sized to limit power loss. I followed the INA180 datasheet layout guidance — checking capacitor voltage ratings and shunt power rating — to improve measurement stability and cut noise in the sense path, then laid out and soldered the PCB in Altium Designer.",
       stack: ["Altium Designer", "INA180", "Analog Design", "PCB Layout", "Soldering"],
       photos: [
-        { src: "images/current-sense-board.jpg", cap: "soldered PCB" },
-        { src: "images/current-sense-layout.png", cap: "Altium layout" },
-        { src: "images/current-sense-schematic.png", cap: "schematic" }
+        { src: "current-sense-board.jpg", cap: "soldered PCB" },
+        { src: "current-sense-layout.png", cap: "Altium layout" },
+        { src: "current-sense-schematic.png", cap: "schematic" }
       ],
       links: []
     }
